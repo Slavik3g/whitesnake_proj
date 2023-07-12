@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  whitesnake_proj:
+    restart: always
+    build: .
+    ports:
+      - "8000:8000"
+#    links:
+#      - postgres:postgres
+
+#  postgres:
+#    restart: always
+#    image: postgres:latest
+#    ports:
+#      - "5432:5432"
