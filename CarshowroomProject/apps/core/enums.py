@@ -32,6 +32,7 @@ class CarFuelEnum(Enum):
     def choices(cls):
         return [(item.value, item.name) for item in cls]
 
+
 class CarBrandEnum(Enum):
     BMW = 'bmw'
     SUBARU = 'subaru'

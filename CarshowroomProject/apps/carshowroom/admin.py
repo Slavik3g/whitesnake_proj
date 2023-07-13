@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from apps.carshowroom.models import CarShowroomModel, CarShowroomCar, CarShowroomDiscount, CarShowroomSupplierPurchaseHistory
+
+admin.site.register((CarShowroomModel, CarShowroomCar, CarShowroomDiscount, CarShowroomSupplierPurchaseHistory))
