@@ -46,3 +46,7 @@ class SupplierDiscount(BaseModel, BaseDiscountModel):
         verbose_name = 'SupplierDiscount'
         verbose_name_plural = 'SupplierDiscounts'
         ordering = ['discount_start']
+
+    def __str__(self):
+        return f'{self.supplier.name} {self.car_model.name} {self.car_model.model}'
+
