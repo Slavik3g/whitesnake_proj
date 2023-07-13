@@ -7,6 +7,7 @@ name = "pypi"
 django = "*"
 djangorestframework = "*"
 tzdata = "==2023.3"
+flake8 = "*"
 
 [dev-packages]
 

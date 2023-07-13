@@ -1,0 +1,16 @@
+[flake8]
+exclude =
+    .git,
+    .gitignore,
+    .dockerignore,
+    *.pot,
+    *.py[co],
+    __pycache__,
+    venv,
+    .env,
+    .github,
+    __pycache__,
+    .cache,
+    migrations
+max-complexity = 10
+max-line-length=121
