@@ -10,7 +10,9 @@ django-filter==23.2
 django-stubs==4.2.3
 django-stubs-ext==4.2.2
 djangorestframework==3.14.0
+drf-yasg==1.21.6
 flake8==6.0.0
+inflection==0.5.1
 isort==5.12.0
 lazy-object-proxy==1.9.0
 mccabe==0.7.0
@@ -27,10 +29,12 @@ pylint-django==2.5.3
 pylint-plugin-utils==0.8.2
 python-dotenv==1.0.0
 pytz==2023.3
+PyYAML==6.0
 sqlparse==0.4.4
 tomlkit==0.11.8
 types-pytz==2023.3.0.0
 types-PyYAML==6.0.12.10
 typing_extensions==4.7.1
 tzdata==2023.3
+uritemplate==4.1.1
 wrapt==1.15.0

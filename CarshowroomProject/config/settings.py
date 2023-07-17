@@ -45,12 +45,14 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_countries',
-    'django.contrib.postgres',
 ]
 
 THIRD_PARTIES_APPS = [
     'rest_framework',
+    'drf_yasg',
+    'django_countries',
+    'django.contrib.postgres',
+
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTIES_APPS + LOCAL_APPS
 
