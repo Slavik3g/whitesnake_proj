@@ -15,7 +15,7 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
 
-    def delete(self, *args, **kwargs):
+    def safe_delete(self, *args, **kwargs):
         self.is_active = False
         self.save()
 
@@ -46,8 +46,8 @@ class BaseUser(AbstractUser):
 class BaseDiscountModel(models.Model):
     percent = models.PositiveSmallIntegerField(default=5, validators=[MinValueValidator(0), MaxValueValidator(100)])
     car_model = models.ManyToManyField(CarModel)
-    discount_start = models.DateTimeField(auto_now_add=datetime.now().date())
-    discount_end = models.DateTimeField(auto_now_add=datetime.now().date() + timedelta(days=10))
+    discount_start = models.DateField(default=datetime.now().date())
+    discount_end = models.DateField(default=datetime.now().date() + timedelta(days=10))
     description = models.CharField(max_length=500, null=True)
 
     class Meta:

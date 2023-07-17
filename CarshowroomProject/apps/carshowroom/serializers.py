@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import CarShowroomModel
+from .models import CarShowroomModel, CarShowroomDiscount
 
 
 class CarShowroomSerializer(serializers.ModelSerializer):

@@ -35,7 +35,7 @@ class SupplierCar(BaseModel):
         verbose_name_plural = 'SupplierCars'
 
     def __str__(self):
-        return f'{self.supplier.name} {self.car.name} {self.car.model}'
+        return f'{self.supplier.name} {self.car.brand} {self.car.model}'
 
 
 class SupplierDiscount(BaseModel, BaseDiscountModel):

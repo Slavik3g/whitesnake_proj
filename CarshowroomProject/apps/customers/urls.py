@@ -3,8 +3,9 @@ from django.urls import path, include
 from .views import CustomerViewSet
 from django.urls import path, include
 
-router = SimpleRouter()
-router.register('customer', CustomerViewSet)
+customer_router = SimpleRouter()
+customer_router.register('customer', CustomerViewSet)
 
-urlpatterns = []
-urlpatterns += router.urls
+urlpatterns = [
+    path('api/', include(customer_router.urls)),
+]
