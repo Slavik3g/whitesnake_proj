@@ -15,18 +15,19 @@ class SuppliersViewSet(GenericViewSet,
                        SafeDeleteModelMixin, ):
     serializer_class = SupplierSerializer
     queryset = SupplierModel.objects.all()
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny, )
+
 
 
 class SupplierCarViewSet(GenericViewSet,
                          ListModelMixin,
-                         CreateModelMixin,):
+                         CreateModelMixin, ):
     queryset = SupplierCarModel.objects.all()
     serializer_class = SupplierCarSerializer
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny, )
 
 
-class SupplierDiscountView(ListCreateAPIView,):
+class SupplierDiscountView(ListCreateAPIView, ):
     queryset = SupplierDiscount.objects.all()
     serializer_class = SupplierDiscountSerializer
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny, )

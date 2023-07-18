@@ -15,6 +15,8 @@ class CarViewSet(GenericViewSet,
                  SafeDeleteModelMixin,):
     queryset = CarModel.objects.all()
     serializer_class = CarSerializer
+    permission_classes = (permissions.AllowAny, )
+
 
 
 class BaseUserViewSet(GenericViewSet,
@@ -23,6 +25,7 @@ class BaseUserViewSet(GenericViewSet,
                       UpdateModelMixin,
                       CreateModelMixin,
                       SafeDeleteModelMixin,):
-    permission_classes = (permissions.AllowAny,)
     queryset = BaseUser.objects.all()
     serializer_class = BaseUserSerializer
+    permission_classes = (permissions.AllowAny, )
+

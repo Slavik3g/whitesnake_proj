@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework import permissions
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, DestroyModelMixin
 from rest_framework.viewsets import GenericViewSet
 
@@ -16,4 +17,6 @@ class CarShowroomViewSet(GenericViewSet,
                          SafeDeleteModelMixin):
     serializer_class = CarShowroomSerializer
     queryset = CarShowroomModel.objects.all()
+    permission_classes = (permissions.AllowAny, )
+
 
