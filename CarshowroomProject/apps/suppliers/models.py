@@ -7,10 +7,10 @@ from apps.core.models import BaseModel, CarModel, BaseDiscountModel
 
 class SupplierModel(BaseModel):
     name = models.CharField(max_length=100)
-    created_year = models.DateTimeField()
+    created_year = models.DateField()
     count_of_customers = models.PositiveIntegerField(default=0)
-    discount = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator, MaxValueValidator])
-    cars_list = models.ManyToManyField(CarModel, through='SupplierCar')
+    discount = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    cars_list = models.ManyToManyField(CarModel, through='SupplierCarModel')
     balance = models.DecimalField(default=0, max_digits=19, decimal_places=2)
 
     class Meta:
@@ -23,7 +23,7 @@ class SupplierModel(BaseModel):
         return f'{self.name}'
 
 
-class SupplierCar(BaseModel):
+class SupplierCarModel(BaseModel):
     car = models.ForeignKey(CarModel, on_delete=models.RESTRICT)
     supplier = models.ForeignKey(SupplierModel, on_delete=models.RESTRICT)
     price = models.DecimalField(default=0, max_digits=12, decimal_places=2)

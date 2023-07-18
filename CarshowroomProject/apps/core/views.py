@@ -4,25 +4,25 @@ from rest_framework.viewsets import GenericViewSet
 from .mixins import SafeDeleteModelMixin
 from .serializers import CarSerializer, BaseUserSerializer
 from .models import CarModel, BaseUser
-from rest_framework import mixins
+from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin, CreateModelMixin
 
 
-class CarViewSet(mixins.ListModelMixin,
-                 mixins.RetrieveModelMixin,
-                 mixins.UpdateModelMixin,
-                 mixins.CreateModelMixin,
-                 SafeDeleteModelMixin,
-                 GenericViewSet):
+class CarViewSet(GenericViewSet,
+                 ListModelMixin,
+                 RetrieveModelMixin,
+                 UpdateModelMixin,
+                 CreateModelMixin,
+                 SafeDeleteModelMixin,):
     queryset = CarModel.objects.all()
     serializer_class = CarSerializer
 
 
-class BaseUserViewSet(mixins.ListModelMixin,
-                      mixins.RetrieveModelMixin,
-                      mixins.UpdateModelMixin,
-                      mixins.CreateModelMixin,
-                      mixins.DestroyModelMixin,
-                      GenericViewSet):
+class BaseUserViewSet(GenericViewSet,
+                      ListModelMixin,
+                      RetrieveModelMixin,
+                      UpdateModelMixin,
+                      CreateModelMixin,
+                      SafeDeleteModelMixin,):
     permission_classes = (permissions.AllowAny,)
     queryset = BaseUser.objects.all()
     serializer_class = BaseUserSerializer

@@ -8,6 +8,7 @@ from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveMode
 
 
 class CustomerViewSet(GenericViewSet,
+                      CreateModelMixin,
                       ListModelMixin,
                       RetrieveModelMixin,
                       SafeDeleteModelMixin):

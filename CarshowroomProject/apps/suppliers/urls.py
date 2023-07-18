@@ -1,15 +1,15 @@
 from rest_framework.routers import SimpleRouter
-from django.urls import path, include
-from .views import SuppliersViewSet, SupplierCarViewSet, SuppliersDiscountView
+from django.urls import path, include, re_path
+from .views import SuppliersViewSet, SupplierCarViewSet, SupplierDiscountView
 
 supplier_router = SimpleRouter()
-supplier_router.register('supplier', SuppliersViewSet, basename='supplier')
+supplier_router.register(r'suppliers', SuppliersViewSet)
 
 suppliers_car_router = SimpleRouter()
-suppliers_car_router.register('cars', SupplierCarViewSet,basename='supplier_car')
+suppliers_car_router.register(r'cars', SupplierCarViewSet)
 
 urlpatterns = [
     path('api/', include(supplier_router.urls)),
-    path('api/supplier/', include(suppliers_car_router.urls)),
-    path('api/supplier/discount/', SuppliersDiscountView.as_view()),
+    re_path(r'api/supplier/', include(suppliers_car_router.urls)),
+    re_path(r'api/supplier/discount/', SupplierDiscountView.as_view()),
 ]

@@ -6,4 +6,4 @@ from .models import CarShowroomModel, CarShowroomDiscount
 class CarShowroomSerializer(serializers.ModelSerializer):
     class Meta:
         model = CarShowroomModel
-        fields = '__all__'
+        fields = ('name', 'country', 'car_characteristics', 'balance', 'discount',)

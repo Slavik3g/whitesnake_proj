@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-
+from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -43,11 +43,15 @@ class BaseUser(AbstractUser):
         return f'{self.username}'
 
 
+def discount_end_distance():
+    return timezone.now().date() + timedelta(days=10)
+
+
 class BaseDiscountModel(models.Model):
     percent = models.PositiveSmallIntegerField(default=5, validators=[MinValueValidator(0), MaxValueValidator(100)])
     car_model = models.ManyToManyField(CarModel)
-    discount_start = models.DateField(default=datetime.now().date())
-    discount_end = models.DateField(default=datetime.now().date() + timedelta(days=10))
+    discount_start = models.DateField(default=timezone.now().date)
+    discount_end = models.DateField(default=discount_end_distance)
     description = models.CharField(max_length=500, null=True)
 
     class Meta:

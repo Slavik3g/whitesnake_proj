@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import SupplierModel, SupplierCar, SupplierDiscount
+from .models import SupplierModel, SupplierCarModel, SupplierDiscount
 from apps.core.models import CarModel
 
 
@@ -13,11 +13,11 @@ class SupplierSerializer(serializers.ModelSerializer):
 
 class SupplierCarSerializer(serializers.ModelSerializer):
     class Meta:
-        model = SupplierCar
-        fields = '__all__'
+        model = SupplierCarModel
+        exclude = ('is_active',)
 
 
 class SupplierDiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = SupplierDiscount
-        fields = '__all__'
+        exclude = ('is_active',)
