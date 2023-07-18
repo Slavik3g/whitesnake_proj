@@ -27,14 +27,15 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1']
 
 # Application definition
 
 LOCAL_APPS = [
-    'apps.carshowroom',
-    'apps.customers',
-    'apps.suppliers',
+    'apps.carshowroom.apps.CarshowroomConfig',
+    'apps.customers.apps.CustomersConfig',
+    'apps.suppliers.apps.SuppliersConfig',
+    'apps.core.apps.CoreConfig',
 ]
 
 DJANGO_APPS = [
@@ -44,6 +45,7 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_countries'
 ]
 
 THIRD_PARTIES_APPS = [
@@ -114,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Minsk'
 
 USE_I18N = True
 
@@ -130,4 +132,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1']
+AUTH_USER_MODEL = 'core.BaseUser'

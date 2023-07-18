@@ -1,3 +1,4 @@
 from django.contrib import admin
+from apps.core.models import CarModel, BaseUser
 
-# Register your models here.
+admin.site.register((CarModel, BaseUser))
