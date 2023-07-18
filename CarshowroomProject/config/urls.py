@@ -6,6 +6,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
+
+from .settings import DEBUG
 from .yasg import urlpatterns as swagger_urls
 from apps.core.urls import urlpatterns as core_urls
 from apps.suppliers.urls import urlpatterns as suppliers_urls
@@ -23,3 +25,9 @@ urlpatterns = [
 
 urlpatterns += core_urls + suppliers_urls + customer_urls + carshowroom_urls
 urlpatterns += swagger_urls
+
+if DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
