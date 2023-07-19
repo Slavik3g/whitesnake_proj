@@ -23,7 +23,7 @@ class BaseModel(models.Model):
 class CarModel(BaseModel):
     brand = models.CharField(max_length=30, choices=CarBrandEnum.choices())
     fuel = models.CharField(max_length=30, choices=CarFuelEnum.choices())
-    type = models.CharField(max_length=30, choices=CarTypeEnum.choices())
+    body_type = models.CharField(max_length=30, choices=CarTypeEnum.choices())
     model = models.CharField(max_length=50)
 
     def __str__(self):
@@ -43,15 +43,11 @@ class BaseUser(AbstractUser):
         return f'{self.username}'
 
 
-def discount_end_distance():
-    return timezone.now().date() + timedelta(days=10)
-
-
 class BaseDiscountModel(models.Model):
     percent = models.PositiveSmallIntegerField(default=5, validators=[MinValueValidator(0), MaxValueValidator(100)])
     car_model = models.ManyToManyField(CarModel)
-    discount_start = models.DateField(default=timezone.now().date)
-    discount_end = models.DateField(default=discount_end_distance)
+    discount_start = models.DateField()
+    discount_end = models.DateField()
     description = models.CharField(max_length=500, null=True)
 
     class Meta:

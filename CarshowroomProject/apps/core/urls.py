@@ -3,7 +3,7 @@ from .views import CarViewSet, BaseUserViewSet
 from django.urls import path, include
 
 car_router = SimpleRouter()
-car_router.register('car', CarViewSet)
+car_router.register('cars', CarViewSet)
 
 user_router = SimpleRouter()
 user_router.register('user', BaseUserViewSet)

@@ -6,7 +6,7 @@ from .models import CarModel, BaseUser
 class CarSerializer(serializers.ModelSerializer):
     class Meta:
         model = CarModel
-        fields = ('id', 'brand', 'fuel', 'type', 'model',)
+        fields = ('id', 'brand', 'fuel', 'body_type', 'model',)
         read_only_fields = ('id',)
 
 
