@@ -27,7 +27,6 @@ class SupplierCarModel(BaseModel):
     car = models.ForeignKey(CarModel, on_delete=models.RESTRICT)
     supplier = models.ForeignKey(SupplierModel, on_delete=models.RESTRICT)
     price = models.DecimalField(default=0, max_digits=12, decimal_places=2)
-    number = models.PositiveIntegerField(default=0)
 
     class Meta:
         db_table = 'supplier_car'

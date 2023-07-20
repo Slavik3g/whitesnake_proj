@@ -5,6 +5,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from apps.core.enums import CarBrandEnum, CarFuelEnum, CarTypeEnum
+from apps.core.managers import IsActiveManager
 
 
 class BaseModel(models.Model):
@@ -12,10 +13,12 @@ class BaseModel(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    objects = IsActiveManager()
+
     class Meta:
         abstract = True
 
-    def safe_delete(self, *args, **kwargs):
+    def delete(self, *args, **kwargs):
         self.is_active = False
         self.save()
 

@@ -6,13 +6,15 @@ from .models import CustomerModel
 from apps.core.mixins import SafeDeleteModelMixin
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin
 
+from .services import CustomerService
+
 
 class CustomerViewSet(GenericViewSet,
-                      CreateModelMixin,
                       ListModelMixin,
                       RetrieveModelMixin,
                       SafeDeleteModelMixin):
     queryset = CustomerModel.objects.all()
     serializer_class = CustomerSerializer
-    permission_classes = (permissions.AllowAny, )
-
+    lookup_field = 'user'
+    service = CustomerService()
+    permission_classes = (permissions.AllowAny,)

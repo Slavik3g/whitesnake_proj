@@ -7,7 +7,7 @@ from apps.core.models import CarModel
 class SupplierSerializer(serializers.ModelSerializer):
     class Meta:
         model = SupplierModel
-        fields = ('name', 'created_year', 'cars_list', 'discount', 'count_of_customers', 'balance')
+        fields = ('id', 'name', 'created_year', 'cars_list', 'discount', 'count_of_customers', 'balance')
         read_only_fields = ('id',)
 
 

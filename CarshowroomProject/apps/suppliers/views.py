@@ -25,7 +25,7 @@ class SuppliersViewSet(GenericViewSet,
     ordering_fields = ('id', 'name', 'created_year',)
     search_fields = ('id', 'name')
 
-    permission_classes = (permissions.AllowAny,)
+    # permission_classes = (permissions.AllowAny,)
 
 
 class SupplierCarViewSet(GenericViewSet,
@@ -40,3 +40,4 @@ class SupplierDiscountView(ListCreateAPIView, ):
     queryset = SupplierDiscount.objects.all()
     serializer_class = SupplierDiscountSerializer
     permission_classes = (permissions.AllowAny,)
+
