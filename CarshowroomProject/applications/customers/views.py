@@ -3,7 +3,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from .serializers import CustomerSerializer
 from .models import CustomerModel
-from apps.core.mixins import SafeDeleteModelMixin
+from applications.core.mixins import SafeDeleteModelMixin
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin
 
 from .services import CustomerService

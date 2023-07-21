@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .models import SupplierModel, SupplierCarModel, SupplierDiscount
-from apps.core.models import CarModel
+from applications.core.models import CarModel
 
 
 class SupplierSerializer(serializers.ModelSerializer):

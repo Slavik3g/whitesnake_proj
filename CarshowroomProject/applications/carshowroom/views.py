@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from rest_framework import permissions
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, DestroyModelMixin
 from rest_framework.viewsets import GenericViewSet
-from .serializers import CarShowroomSerializer
-from .models import CarShowroomModel
-from apps.core.mixins import SafeDeleteModelMixin
+from .serializers import CarShowroomSerializer, CarshowroomDiscountSerializer
+from .models import CarShowroomModel, CarShowroomDiscount
+from applications.core.mixins import SafeDeleteModelMixin
 from .filters import CarShowroomFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -25,3 +26,9 @@ class CarShowroomViewSet(GenericViewSet,
     filterset_class = CarShowroomFilter
     ordering_fields = ('id', 'name', 'country', 'balance', 'discount')
     search_fields = ('id', 'name', 'country', 'discount')
+
+
+class CarshowroomDiscountView(ListCreateAPIView, ):
+    queryset = CarShowroomDiscount.objects.all()
+    serializer_class = CarshowroomDiscountSerializer
+    permission_classes = (permissions.AllowAny,)

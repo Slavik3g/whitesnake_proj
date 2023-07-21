@@ -4,8 +4,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-from apps.core.enums import CarBrandEnum, CarFuelEnum, CarTypeEnum
-from apps.core.managers import IsActiveManager
+from applications.core.enums import CarBrandEnum, CarFuelEnum, CarTypeEnum
+from applications.core.managers import IsActiveManager
 
 
 class BaseModel(models.Model):

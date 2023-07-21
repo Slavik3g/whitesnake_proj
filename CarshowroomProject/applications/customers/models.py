@@ -1,7 +1,7 @@
 from django.db import models
 
-from apps.carshowroom.models import CarShowroomModel
-from apps.core.models import BaseModel, CarModel, BaseUser
+from applications.carshowroom.models import CarShowroomModel
+from applications.core.models import BaseModel, CarModel, BaseUser
 
 
 class CustomerModel(BaseModel):

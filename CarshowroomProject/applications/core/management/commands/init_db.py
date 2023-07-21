@@ -6,12 +6,12 @@ from enum import Enum
 from django.core.management.base import BaseCommand
 from django.db.models import Min, Max
 
-from apps.core.models import CarModel
-from apps.core.enums import CarBrandEnum, CarFuelEnum, CarTypeEnum
-from apps.carshowroom.models import CarShowroomModel
+from applications.core.models import CarModel
+from applications.core.enums import CarBrandEnum, CarFuelEnum, CarTypeEnum
+from applications.carshowroom.models import CarShowroomModel, CarShowroomDiscount
 from django_countries import countries
 
-from apps.suppliers.models import SupplierModel, SupplierCarModel
+from applications.suppliers.models import SupplierModel, SupplierCarModel, SupplierDiscount
 
 
 class Command(BaseCommand):
@@ -22,6 +22,8 @@ class Command(BaseCommand):
         self._create_showrooms()
         self._create_suppliers()
         self._create_suppliers_cars()
+        self._create_supplier_discount()
+        self._create_carshowroom_discount()
 
     def _create_suppliers(self):
         if SupplierModel.objects.count() >= 10:
@@ -80,6 +82,34 @@ class Command(BaseCommand):
                 discount=random.randint(0, 10),
             )
 
+    def _create_discount(self, entity_class, entity_class_discount):
+        if entity_class_discount.objects.count() >= 20:
+            return
+        for _ in range(20):
+            discount_start = self._generate_random_date(datetime(2020, 1, 1), datetime(2022, 1, 1))
+            discount, created = entity_class_discount.objects.get_or_create(
+                percent=random.randint(0, 30),
+                discount_start=discount_start,
+                discount_end=self._generate_random_date(datetime(2023, 10, 1), datetime(2024, 1, 1))
+            )
+            if created:
+                entity = entity_class.objects.get(id=random.randint(
+                    entity_class.objects.aggregate(Min('id'))['id__min'],
+                    entity_class.objects.aggregate(Max('id'))['id__max']))
+                if entity_class == SupplierModel:
+                    discount = entity_class_discount.objects.add(
+                        supplier=entity
+                    )
+                elif entity_class == CarShowroomModel:
+                    discount = entity_class_discount.objects.add(
+                        car_showroom=entity
+                    )
+                for __ in range(random.randint(2, 5)):
+                    discount.car_model.add(CarModel.objects.get(id=random.randint(
+                        CarModel.objects.aggregate(Min('id'))['id__min'],
+                        CarModel.objects.aggregate(Max('id'))['id__max']
+                    )))
+
     class CarCharacteristics(Enum):
         body_type = random.choice(list(CarTypeEnum)).value
         fuel = random.choice(list(CarFuelEnum)).value
@@ -94,3 +124,9 @@ class Command(BaseCommand):
         random_days = random.randint(0, (end_date - start_date).days)
         random_date = start_date + timedelta(days=random_days)
         return random_date
+
+    def _create_supplier_discount(self):
+        self._create_discount(SupplierModel, SupplierDiscount)
+
+    def _create_carshowroom_discount(self):
+        self._create_discount(CarShowroomModel, CarShowroomDiscount)

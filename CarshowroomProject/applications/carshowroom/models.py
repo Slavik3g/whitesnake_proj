@@ -1,8 +1,8 @@
 from django.db import models
 from django_countries.fields import CountryField
 from django.core.validators import MinValueValidator, MaxValueValidator
-from apps.core.models import BaseModel, CarModel, BaseDiscountModel
-from apps.suppliers.models import SupplierModel
+from applications.core.models import BaseModel, CarModel, BaseDiscountModel
+from applications.suppliers.models import SupplierModel
 
 
 class CarShowroomModel(BaseModel):

@@ -9,10 +9,10 @@ from rest_framework_simplejwt.views import (
 
 from .settings import DEBUG
 from .yasg import urlpatterns as swagger_urls
-from apps.core.urls import urlpatterns as core_urls
-from apps.suppliers.urls import urlpatterns as suppliers_urls
-from apps.customers.urls import urlpatterns as customer_urls
-from apps.carshowroom.urls import urlpatterns as carshowroom_urls
+from applications.core.urls import urlpatterns as core_urls
+from applications.suppliers.urls import urlpatterns as suppliers_urls
+from applications.customers.urls import urlpatterns as customer_urls
+from applications.carshowroom.urls import urlpatterns as carshowroom_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),

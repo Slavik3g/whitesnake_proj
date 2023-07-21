@@ -9,3 +9,8 @@ class CarShowroomSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'country', 'car_characteristics', 'balance', 'discount',)
         read_only_fields = ('id',)
 
+
+class CarshowroomDiscountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CarShowroomDiscount
+        exclude = ('is_active',)
