@@ -113,7 +113,7 @@ class Migration(migrations.Migration):
             options={
                 "verbose_name": "CarShowroom",
                 "verbose_name_plural": "CarShowrooms",
-                "db_table": "car_showroom",
+                "db_table": "carshowroom",
                 "ordering": ["name"],
             },
         ),

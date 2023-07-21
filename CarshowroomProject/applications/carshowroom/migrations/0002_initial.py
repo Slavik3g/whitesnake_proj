@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="carshowroomsupplierpurchasehistory",
-            name="car_showroom",
+            name="carshowroom",
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.RESTRICT,
                 to="carshowroom.carshowroommodel",
@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="carshowroomdiscount",
-            name="car_showroom",
+            name="carshowroom",
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.RESTRICT,
                 to="carshowroom.carshowroommodel",
@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="carshowroomcar",
-            name="car_showroom",
+            name="carshowroom",
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.RESTRICT,
                 to="carshowroom.carshowroommodel",

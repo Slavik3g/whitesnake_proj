@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "car_showroom",
+                    "carshowroom",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.RESTRICT,
                         to="carshowroom.carshowroommodel",

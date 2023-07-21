@@ -14,7 +14,7 @@ class CarShowroomModel(BaseModel):
     car_list = models.ManyToManyField(CarModel, through='CarShowroomCar')
 
     class Meta:
-        db_table = 'car_showroom'
+        db_table = 'carshowroom'
         verbose_name = 'CarShowroom'
         verbose_name_plural = 'CarShowrooms'
         ordering = ['name']
@@ -53,7 +53,7 @@ class CarShowroomDiscount(BaseModel, BaseDiscountModel):
 
 class CarShowroomSupplierPurchaseHistory(BaseModel):
     car = models.ForeignKey(CarModel, on_delete=models.RESTRICT)
-    car_showroom = models.ForeignKey(CarShowroomModel, on_delete=models.RESTRICT)
+    carshowroom = models.ForeignKey(CarShowroomModel, on_delete=models.RESTRICT)
     supplier = models.ForeignKey(SupplierModel, on_delete=models.RESTRICT)
     total_price = models.DecimalField(default=0, max_digits=14, decimal_places=2)
     cars_count = models.PositiveIntegerField(default=0)
@@ -64,4 +64,4 @@ class CarShowroomSupplierPurchaseHistory(BaseModel):
         verbose_name_plural = 'CarShowroomSupplierPurchaseHistories'
 
     def __str__(self):
-        return f'{self.car_showroom.name} {self.supplier.name} {self.car.name} {self.car.model}'
+        return f'{self.carshowroom.name} {self.supplier.name} {self.car.name} {self.car.model}'

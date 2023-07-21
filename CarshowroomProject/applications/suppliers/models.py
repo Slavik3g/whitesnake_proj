@@ -9,9 +9,10 @@ class SupplierModel(BaseModel):
     name = models.CharField(max_length=100)
     created_year = models.DateField()
     count_of_customers = models.PositiveIntegerField(default=0)
-    discount = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     cars_list = models.ManyToManyField(CarModel, through='SupplierCarModel')
     balance = models.DecimalField(default=0, max_digits=19, decimal_places=2)
+    discount = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    count_of_purchases_to_discount = models.PositiveSmallIntegerField()
 
     class Meta:
         db_table = 'supplier'
@@ -48,4 +49,3 @@ class SupplierDiscount(BaseModel, BaseDiscountModel):
 
     def __str__(self):
         return f'{self.supplier.name} {self.car_model.name} {self.car_model.model}'
-
