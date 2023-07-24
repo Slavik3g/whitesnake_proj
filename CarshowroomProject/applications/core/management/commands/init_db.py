@@ -19,10 +19,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self._create_cars()
-        self._create_showrooms()
         self._create_suppliers()
         self._create_suppliers_cars()
         self._create_supplier_discount()
+        self._create_showrooms()
         self._create_carshowroom_discount()
 
     def _create_suppliers(self):
@@ -83,31 +83,41 @@ class Command(BaseCommand):
             )
 
     def _create_discount(self, entity_class, entity_class_discount):
-        if entity_class_discount.objects.count() >= 20:
+        if entity_class_discount.objects.count() >= 10:
             return
-        for _ in range(20):
-            discount_start = self._generate_random_date(datetime(2020, 1, 1), datetime(2022, 1, 1))
-            discount, created = entity_class_discount.objects.get_or_create(
-                percent=random.randint(0, 30),
-                discount_start=discount_start,
-                discount_end=self._generate_random_date(datetime(2023, 10, 1), datetime(2024, 1, 1))
-            )
+        min_id = entity_class.objects.aggregate(Min('id'))['id__min']
+        max_id = entity_class.objects.aggregate(Max('id'))['id__max']
+        min_car_id = CarModel.objects.aggregate(Min('id'))['id__min']
+        max_car_id = CarModel.objects.aggregate(Max('id'))['id__max']
+        discount_start = self._generate_random_date(datetime(2020, 1, 1), datetime(2022, 1, 1))
+        for i in range(10):
+            if entity_class == SupplierModel:
+                discount, created = entity_class_discount.objects.get_or_create(
+                    supplier=entity_class.objects.get(id=random.randint(
+                        min_id,
+                        max_id
+                    )),
+                    discount_start=discount_start,
+                    discount_end=self._generate_random_date(datetime(2023, 10, 1), datetime(2024, 1, 1)),
+                    percent=random.randint(0, 20),
+
+                )
+            else:
+                discount, created = entity_class_discount.objects.get_or_create(
+                    carshowroom=entity_class.objects.get(id=random.randint(
+                        min_id,
+                        max_id
+                    )),
+                    discount_start=discount_start,
+                    discount_end=self._generate_random_date(datetime(2023, 10, 1), datetime(2024, 1, 1)),
+                    percent=random.randint(0, 20),
+
+                )
             if created:
-                entity = entity_class.objects.get(id=random.randint(
-                    entity_class.objects.aggregate(Min('id'))['id__min'],
-                    entity_class.objects.aggregate(Max('id'))['id__max']))
-                if entity_class == SupplierModel:
-                    discount = entity_class_discount.objects.add(
-                        supplier=entity
-                    )
-                elif entity_class == CarShowroomModel:
-                    discount = entity_class_discount.objects.add(
-                        car_showroom=entity
-                    )
-                for __ in range(random.randint(2, 5)):
+                for j in range(random.randint(0, 5)):
                     discount.car_model.add(CarModel.objects.get(id=random.randint(
-                        CarModel.objects.aggregate(Min('id'))['id__min'],
-                        CarModel.objects.aggregate(Max('id'))['id__max']
+                        min_car_id,
+                        max_car_id
                     )))
 
     class CarCharacteristics(Enum):

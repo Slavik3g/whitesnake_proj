@@ -17,14 +17,14 @@ def debug_task(self):
 
 
 app.conf.beat_schedule = {
-    'buy_suppliers_cars': {
-        'task': 'config.celery.debug_task',
+    'buy_car_from_supplier': {
+        'task': 'applications.carshowroom.tasks.buy_car_from_supplier',
         'schedule': crontab(minute='*/1'),
     },
-    # 'check_suppliers_benefit': {
-    #     'task': 'src.carshowroom.tasks.check_supplier_benefit',
-    #     'schedule': crontab(minute='0', hour='*/1'),
-    # },
+    'check_suppliers_benefit': {
+        'task': 'src.carshowroom.tasks.check_suppliers_benefit',
+        'schedule': crontab(minute='0', hour='*/1'),
+    },
     # 'accept_offer': {
     #     'task': 'src.carshowroom.tasks.accept_offer',
     #     'schedule': crontab(minute='*/10'),

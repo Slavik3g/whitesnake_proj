@@ -12,7 +12,6 @@ class SupplierModel(BaseModel):
     cars_list = models.ManyToManyField(CarModel, through='SupplierCarModel')
     balance = models.DecimalField(default=0, max_digits=19, decimal_places=2)
     discount = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    count_of_purchases_to_discount = models.PositiveSmallIntegerField()
 
     class Meta:
         db_table = 'supplier'

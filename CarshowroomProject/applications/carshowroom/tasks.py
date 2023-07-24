@@ -26,38 +26,56 @@ def number_of_car_purchases(car, carshowroom):
     return CustomerPurchaseHistoryModel.objects.filter(car=car, carshowroom=carshowroom).count()
 
 
-def get_individual_supplier_discount(supplier, carshowroom):
+def get_individual_supplier_discount(carshowroom, supplier):
     discount = CarShowroomSupplierPurchaseHistory.objects.filter(
         carshowroom=carshowroom, supplier=supplier
     ).aggregate(Sum('cars_count'))['cars_count__sum']
     return discount if discount else 0
 
 
-@shared_task()
-def confirm_customers():
-    car_showrooms = CarShowroomModel.objects.all()
-    for car_showroom in car_showrooms:
-        cars = CarModel.objects.filter(**car_showroom.car_characteristics)
-        for car in cars:
-            supplier_car = SupplierCarModel.objects.filter(car=car).order_by(
-                (1 - max_percent_discount(car=car, supplier=F('supplier')) / 100) * F('price')
-            ).first()
-            if supplier_car:
-                CarShowroomCar.objects.get_or_create(
-                    car=car,
-                    car_showroom=car_showroom,
-                    price=supplier_car.price,
-                    number=0,
-                    supplier=supplier_car.supplier
-                )
+# @shared_task
+# def confirm_customers():
+#     carshowrooms = CarShowroomModel.objects.all()
+#     for carshowroom in carshowrooms:
+#         cars = CarModel.objects.filter(**carshowroom.car_characteristics)
+#         for car in cars:
+#             supplier_car = SupplierCarModel.objects.filter(car=car).order_by(
+#                 (1 - max_percent_discount(supplier=F('supplier'), car=car) / 100) * F('price')
+#             ).first()
+#             if supplier_car:
+#                 CarShowroomCar.objects.get_or_create(
+#                     price=supplier_car.price,
+#                     car=car,
+#                     carshowroom=carshowroom,
+#                     number=0,
+#                     supplier=supplier_car.supplier
+#                 )
 
 
-@shared_task()
+@shared_task
+def confirm_customer(carshowroom_id):
+    carshowroom = CarShowroomModel.objects.get(id=carshowroom_id)
+    cars = CarModel.objects.filter(**carshowroom.car_characteristics)
+    for car in cars:
+        supplier_car = SupplierCarModel.objects.filter(car=car).order_by(
+            (1 - max_percent_discount(supplier=F('supplier'), car=car) / 100) * F('price')
+        ).first()
+        if supplier_car:
+            CarShowroomCar.objects.get_or_create(
+                price=supplier_car.price,
+                car=car,
+                carshowroom=carshowroom,
+                number=0,
+                supplier=supplier_car.supplier
+            )
+
+
+@shared_task
 def buy_car_from_supplier():
-    carshowroomcars = CarShowroomCar.objects.all()
+    carshowroomcars = CarShowroomCar.objects.select_related('car').select_related('carshowroom').all()
     carshowroomcars = sorted(carshowroomcars,
-                             key=lambda x: number_of_car_purchases(car=carshowroomcars.car,
-                                                                   carshowroom=carshowroomcars.carshowroom),
+                             key=lambda x: number_of_car_purchases(car=x.car,
+                                                                   carshowroom=x.carshowroom),
                              reverse=True)
     for carshowroomcar in carshowroomcars:
         car = carshowroomcar.car
@@ -66,14 +84,14 @@ def buy_car_from_supplier():
 
         supplier_car = SupplierCarModel.objects.filter(supplier=supplier, car=car).first()
         if supplier_car:
-            individual_discount = get_individual_supplier_discount(carshowroom, supplier)
+            individual_discount = get_individual_supplier_discount(carshowroom=carshowroom, supplier=supplier)
             discount_price = supplier_car.price * decimal.Decimal(
                 (1 - (max_percent_discount(supplier=supplier, car=car) + individual_discount) / 100)
             )
             if carshowroom.balance >= discount_price:
                 carshowroom.balance -= Decimal(discount_price)
                 supplier.balance += Decimal(discount_price)
-                purchase_history = CarShowroomSupplierPurchaseHistory.objects.get_or_create(
+                purchase_history, created = CarShowroomSupplierPurchaseHistory.objects.get_or_create(
                     car=car,
                     supplier=supplier,
                     carshowroom=carshowroom
@@ -88,3 +106,13 @@ def buy_car_from_supplier():
                 carshowroomcar.save()
 
 
+@shared_task()
+def check_suppliers_benefit():
+    carshowroomcars = CarShowroomCar.objects.all()
+    for carshowroomcar in carshowroomcars:
+        supplier_car = SupplierCarModel.objects.filter(car=carshowroomcar.car).order_by(
+            (1 - max_percent_discount(supplier=F('supplier'), car=carshowroomcar.car) / 100) * F('price')
+        ).first()
+        if supplier_car.supplier != carshowroomcar.supplier:
+            carshowroomcar.supplier = supplier_car.supplier
+            carshowroomcar.save()

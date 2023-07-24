@@ -21,7 +21,7 @@ class CustomerModel(BaseModel):
 class CustomerPurchaseHistoryModel(BaseModel):
     price = models.DecimalField(default=0, max_digits=10, decimal_places=3)
     car = models.ForeignKey(CarModel, on_delete=models.RESTRICT)
-    car_showroom = models.ForeignKey(CarShowroomModel, on_delete=models.RESTRICT)
+    carshowroom = models.ForeignKey(CarShowroomModel, on_delete=models.RESTRICT)
     customer = models.ForeignKey(CustomerModel, on_delete=models.RESTRICT)
 
     class Meta:
@@ -30,4 +30,4 @@ class CustomerPurchaseHistoryModel(BaseModel):
         verbose_name_plural = 'CustomerPurchaseHistories'
 
     def __str__(self):
-        return f'{self.customer.name} {self.car_showroom.name} {self.car.name} {self.car.model}'
+        return f'{self.customer.name} {self.carshowroom.name} {self.car.name} {self.car.model}'

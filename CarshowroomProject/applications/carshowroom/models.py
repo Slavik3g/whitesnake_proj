@@ -25,9 +25,10 @@ class CarShowroomModel(BaseModel):
 
 class CarShowroomCar(BaseModel):
     car = models.ForeignKey(CarModel, on_delete=models.RESTRICT)
-    car_showroom = models.ForeignKey(CarShowroomModel, on_delete=models.RESTRICT)
+    carshowroom = models.ForeignKey(CarShowroomModel, on_delete=models.RESTRICT)
     price = models.DecimalField(default=0, max_digits=12, decimal_places=2)
     number = models.PositiveIntegerField(default=0)
+    supplier = models.ForeignKey(SupplierModel, on_delete=models.RESTRICT, null=True)
 
     class Meta:
         db_table = 'car_showroom_car'
@@ -35,11 +36,11 @@ class CarShowroomCar(BaseModel):
         verbose_name_plural = 'CarShowroomsCars'
 
     def __str__(self):
-        return f'{self.car_showroom.name} {self.car.name} {self.car.model}'
+        return f'{self.carshowroom.name} {self.car.brand} {self.car.model}'
 
 
 class CarShowroomDiscount(BaseModel, BaseDiscountModel):
-    car_showroom = models.ForeignKey(CarShowroomModel, on_delete=models.RESTRICT)
+    carshowroom = models.ForeignKey(CarShowroomModel, on_delete=models.RESTRICT)
 
     class Meta:
         db_table = 'car_showroom_discount'
