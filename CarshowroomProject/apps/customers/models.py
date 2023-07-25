@@ -6,7 +6,7 @@ from apps.core.models import BaseModel, CarModel, BaseUser
 
 class CustomerModel(BaseModel):
     balance = models.DecimalField(default=0, max_digits=19, decimal_places=2)
-    user = models.OneToOneField(BaseUser, on_delete=models.CASCADE, primary_key=True)
+    user = models.OneToOneField(BaseUser, on_delete=models.RESTRICT, primary_key=True)
     purchase_history = models.ManyToManyField(CarShowroomModel, through='CustomerPurchaseHistoryModel')
 
     class Meta:
@@ -15,7 +15,7 @@ class CustomerModel(BaseModel):
         verbose_name_plural = 'Customers'
 
     def __str__(self):
-        return f'{self.user.name}'
+        return f'{self.user.username}'
 
 
 class CustomerPurchaseHistoryModel(BaseModel):

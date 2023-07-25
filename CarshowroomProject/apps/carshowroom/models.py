@@ -10,7 +10,7 @@ class CarShowroomModel(BaseModel):
     country = CountryField(default='US')
     car_characteristics = models.JSONField(default=dict)
     balance = models.DecimalField(default=0, max_digits=19, decimal_places=2)
-    discount = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator, MaxValueValidator])
+    discount = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     car_list = models.ManyToManyField(CarModel, through='CarShowroomCar')
 
     class Meta:
