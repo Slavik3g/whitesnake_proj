@@ -25,8 +25,8 @@ app.conf.beat_schedule = {
         'task': 'src.carshowroom.tasks.check_suppliers_benefit',
         'schedule': crontab(minute='0', hour='*/1'),
     },
-    # 'accept_offer': {
-    #     'task': 'src.carshowroom.tasks.accept_offer',
-    #     'schedule': crontab(minute='*/10'),
-    # }
+    'check_offer': {
+        'task': 'src.carshowroom.tasks.check_offer',
+        'schedule': crontab(minute='*/10'),
+    }
 }

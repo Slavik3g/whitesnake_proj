@@ -39,25 +39,6 @@ def get_individual_supplier_discount(carshowroom, supplier):
     return discount if discount else 0
 
 
-# @shared_task
-# def confirm_customers():
-#     carshowrooms = CarShowroomModel.objects.all()
-#     for carshowroom in carshowrooms:
-#         cars = CarModel.objects.filter(**carshowroom.car_characteristics)
-#         for car in cars:
-#             supplier_car = SupplierCarModel.objects.filter(car=car).order_by(
-#                 (1 - max_percent_discount(supplier=F('supplier'), car=car) / 100) * F('price')
-#             ).first()
-#             if supplier_car:
-#                 CarShowroomCar.objects.get_or_create(
-#                     price=supplier_car.price,
-#                     car=car,
-#                     carshowroom=carshowroom,
-#                     number=0,
-#                     supplier=supplier_car.supplier
-#                 )
-
-
 @shared_task
 def confirm_customer(carshowroom_id):
     carshowroom = CarShowroomModel.objects.get(id=carshowroom_id)
