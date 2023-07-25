@@ -31,3 +31,15 @@ class CustomerPurchaseHistoryModel(BaseModel):
 
     def __str__(self):
         return f'{self.customer.name} {self.carshowroom.name} {self.car.name} {self.car.model}'
+
+
+class OfferModel(BaseModel):
+    customer = models.ForeignKey(CustomerModel, on_delete=models.RESTRICT)
+    max_price = models.DecimalField(default=0, max_digits=10, decimal_places=3)
+    car_char = models.JSONField()
+
+    class Meta:
+        db_table = 'customer_offer'
+        verbose_name = 'CustomerOffer'
+        verbose_name_plural = 'CustomersOffers'
+        ordering = ('created',)

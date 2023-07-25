@@ -7,18 +7,24 @@ from django.db.models import Q, Max, Min, F, ExpressionWrapper, Sum
 from django.utils import timezone
 from rest_framework.fields import DecimalField
 
-from applications.carshowroom.models import CarShowroomModel, CarShowroomCar, CarShowroomSupplierPurchaseHistory
+from applications.carshowroom.models import CarShowroomModel, CarShowroomCar, CarShowroomSupplierPurchaseHistory, \
+    CarShowroomDiscount
 from applications.core.models import CarModel
-from applications.customers.models import CustomerPurchaseHistoryModel
+from applications.customers.models import CustomerPurchaseHistoryModel, OfferModel
 from applications.suppliers.models import SupplierCarModel, SupplierDiscount, SupplierModel
 
 
 # from applications.carshowroom.tasks import *
 
 def max_percent_discount(car, supplier=None, carshowroom=None):
-    discounts = SupplierDiscount.objects.filter(
-        Q(car_model=car) & Q(discount_end__gt=timezone.now().date()) & Q(supplier=supplier)).aggregate(
-        Max('percent'))['percent__max']
+    if supplier is None:
+        discounts = CarShowroomDiscount.objects.filter(
+            Q(car_model=car) & Q(discount_end__gt=timezone.now().date()) & Q(carshowroom=carshowroom)).aggregate(
+            Max('percent'))['percent__max']
+    else:
+        discounts = SupplierDiscount.objects.filter(
+            Q(car_model=car) & Q(discount_end__gt=timezone.now().date()) & Q(supplier=supplier)).aggregate(
+            Max('percent'))['percent__max']
     return discounts if discounts else 0
 
 
@@ -72,7 +78,7 @@ def confirm_customer(carshowroom_id):
 
 @shared_task
 def buy_car_from_supplier():
-    carshowroomcars = CarShowroomCar.objects.select_related('car').select_related('carshowroom').all()
+    carshowroomcars = CarShowroomCar.objects.select_related('car').select_related('carshowroom').select_related('supplier').all()
     carshowroomcars = sorted(carshowroomcars,
                              key=lambda x: number_of_car_purchases(car=x.car,
                                                                    carshowroom=x.carshowroom),
@@ -116,3 +122,36 @@ def check_suppliers_benefit():
         if supplier_car.supplier != carshowroomcar.supplier:
             carshowroomcar.supplier = supplier_car.supplier
             carshowroomcar.save()
+
+
+@shared_task()
+def check_offer():
+    offers = OfferModel.objects.select_related('customer').all()
+    offers = sorted(offers, key=lambda x: x.updated)
+    for offer in offers:
+        cars = CarModel.objects.filter(**offer.car_char)
+        carshowroom_car = CarShowroomCar.objects.filter(car__in=cars, number__gt=0).order_by(
+            (1 - max_percent_discount(carshowroom=F('carshowroom'), car=F('car_model')) / 100 * F('price'))).last()
+        print(carshowroom_car)
+        if carshowroom_car:
+            print(carshowroom_car)
+            price = carshowroom_car.price
+            print(price)
+            print(offer.customer.balance)
+            if offer.customer.balance >= price and offer.max_price >= price:
+                carshowroom_car.carshowroom.balance += Decimal(price)
+                print(offer.customer.balance)
+                offer.customer.balance -= Decimal(price)
+                print(offer.customer.balance)
+                carshowroom_car.number -= 1
+                offer.is_active = False
+                CustomerPurchaseHistoryModel.objects.create(
+                    price=price,
+                    carshowroom=carshowroom_car.carshowroom,
+                    customer=offer.customer,
+                    car=carshowroom_car.car,
+                )
+                carshowroom_car.save()
+                offer.save()
+                offer.customer.save()
+

@@ -1,5 +1,6 @@
+from django.contrib.auth.hashers import make_password
 from rest_framework import viewsets, permissions
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from .mixins import SafeDeleteModelMixin
 from .serializers import CarSerializer, BaseUserSerializer
@@ -28,12 +29,13 @@ class CarViewSet(GenericViewSet,
     search_fields = ('id', 'brand', 'fuel', 'body_type', 'model',)
 
 
-class BaseUserViewSet(GenericViewSet,
-                      ListModelMixin,
-                      RetrieveModelMixin,
-                      UpdateModelMixin,
-                      CreateModelMixin,
-                      SafeDeleteModelMixin, ):
+class BaseUserViewSet(ModelViewSet):
     queryset = BaseUser.objects.all()
     serializer_class = BaseUserSerializer
     permission_classes = (permissions.AllowAny,)
+
+
+    def perform_create(self, serializer):
+        password = self.request.data.get('password')
+        hashed_password = make_password(password)
+        serializer.save(password=hashed_password)
