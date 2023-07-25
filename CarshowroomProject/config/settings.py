@@ -21,6 +21,7 @@ ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', ]
 
 INTERNAL_IPS = ['127.0.0.1']
 import socket
+
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
 # Application definition
@@ -49,6 +50,7 @@ THIRD_PARTIES_APPS = [
     'rest_framework_simplejwt',
     "debug_toolbar",
     'django_filters',
+    'djoser',
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTIES_APPS + LOCAL_APPS
 
