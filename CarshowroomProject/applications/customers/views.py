@@ -10,6 +10,7 @@ from applications.core.mixins import SafeDeleteModelMixin
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin
 
 from .services import CustomerService
+from ..core.permissions import IsEmailConfirmed
 
 
 class CustomerViewSet(GenericViewSet,
@@ -27,7 +28,7 @@ class CustomerViewSet(GenericViewSet,
 class OfferViewSet(GenericViewSet,
                    CreateModelMixin):
     # permission_classes = (IsAuthenticated, EmailConfirmPermission)
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (IsEmailConfirmed,)
     serializer_class = OfferSerializer
     queryset = OfferModel.objects.all()
 
