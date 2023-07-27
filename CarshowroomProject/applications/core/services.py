@@ -6,6 +6,8 @@ from django.utils.encoding import force_bytes, force_str
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
+from applications.core import tasks
+from applications.core.models import BaseUser
 from applications.core.models import BaseUser, CarModel
 
 
@@ -53,25 +55,19 @@ class UserService:
     def send_confirm_email(self, user):
         verification_token = self.get_tokens_for_user(user=user)['access']
         verification_link = f'http://localhost:8000/api/user/verify_email/?token={verification_token}'
-        send_mail(
-            'Подтверждение регистрации',
-            f'Для завершения регистрации перейдите по ссылке: {verification_link}',
-            'DjangoApp@example.com',
-            [user.email],
-            fail_silently=False,
-        )
+        subject = 'Подтверждение регистрации'
+        message = f'Для завершения регистрации перейдите по ссылке: {verification_link}'
+        recipient_list = [user.email]
+        tasks.send_email_task.delay(subject=subject, message=message, recipient_list=recipient_list)
 
     def send_email_for_restore_password(self, user, email):
         token = self.get_tokens_for_user(user=user)['access']
         uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
         reset_link = f'http://localhost:8000/api/reset_password/confirm/{uidb64}/{token}/'
-        send_mail(
-            'Password Reset',
-            f'Please click on the link below to reset your password:\n{reset_link}',
-            'noreply@example.com',
-            [email],
-            fail_silently=False,
-        )
+        subject = 'Password Reset'
+        message = f'Please click on the link below to reset your password:\n{reset_link}'
+        recipient_list = [email]
+        tasks.send_email_task.delay(subject=subject, message=message, recipient_list=recipient_list)
 
     def check_token(self, user, token):
         user_token = self.get_user_from_token(token_str=token)
@@ -88,10 +84,7 @@ class UserService:
         token = self.get_tokens_for_user(user=user)['access']
         uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
         reset_link = f'http://localhost:8000/api/user/change_email/?uid={uidb64}&token={token}'
-        send_mail(
-            'Change email',
-            f'Please click on the link below to change your email:\n{reset_link}',
-            'noreply@example.com',
-            [user.email],
-            fail_silently=False,
-        )
+        subject = 'Change email'
+        message = f'Please click on the link below to change your email:\n{reset_link}'
+        recipient_list = [user.email]
+        tasks.send_email_task.delay(subject=subject, message=message, recipient_list=recipient_list)

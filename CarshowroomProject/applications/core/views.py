@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
+from . import tasks
 from .mixins import SafeDeleteModelMixin
 from .serializers import CarSerializer, BaseUserSerializer, RestorePasswordEmailSendSerializer
 from .models import CarModel, BaseUser
@@ -117,7 +118,7 @@ class RestorePasswordEmailSendView(APIView):
         email = serializer.validated_data['email']
         user = BaseUser.objects.filter(email=email).first()
         if user:
-            self.service.send_email_for_restore_password(email=email, user=user)
+            self.service.send_email_for_restore_password(email=email, user=user).delay()
         return Response({'detail': 'Password reset email sent.'}, status=status.HTTP_200_OK)
 
 
