@@ -18,12 +18,10 @@ from applications.suppliers.models import SupplierCarModel, SupplierDiscount, Su
 
 def max_percent_discount(car, supplier=None, carshowroom=None):
     if supplier is None:
-        discounts = CarShowroomDiscount.objects.filter(
-            Q(car_model=car) & Q(discount_end__gt=timezone.now().date()) & Q(carshowroom=carshowroom)).aggregate(
+        discounts = CarShowroomDiscount.objects.get_active_discounts(car=car, carshowroom=carshowroom).aggregate(
             Max('percent'))['percent__max']
     else:
-        discounts = SupplierDiscount.objects.filter(
-            Q(car_model=car) & Q(discount_end__gt=timezone.now().date()) & Q(supplier=supplier)).aggregate(
+        discounts = SupplierDiscount.objects.get_active_discounts(car=car, supplier=supplier).aggregate(
             Max('percent'))['percent__max']
     return discounts if discounts else 0
 
@@ -113,17 +111,11 @@ def check_offer():
         cars = CarModel.objects.filter(**offer.car_char)
         carshowroom_car = CarShowroomCar.objects.filter(car__in=cars, number__gt=0).order_by(
             (1 - max_percent_discount(carshowroom=F('carshowroom'), car=F('car_model')) / 100 * F('price'))).last()
-        print(carshowroom_car)
         if carshowroom_car:
-            print(carshowroom_car)
             price = carshowroom_car.price
-            print(price)
-            print(offer.customer.balance)
             if offer.customer.balance >= price and offer.max_price >= price:
                 carshowroom_car.carshowroom.balance += Decimal(price)
-                print(offer.customer.balance)
                 offer.customer.balance -= Decimal(price)
-                print(offer.customer.balance)
                 carshowroom_car.number -= 1
                 offer.is_active = False
                 CustomerPurchaseHistoryModel.objects.create(

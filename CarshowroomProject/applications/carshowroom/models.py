@@ -1,6 +1,9 @@
 from django.db import models
 from django_countries.fields import CountryField
 from django.core.validators import MinValueValidator, MaxValueValidator
+
+from applications.carshowroom.managers import CarShowroomDiscountQuerySet
+from applications.core.managers import IsActiveManager
 from applications.core.models import BaseModel, CarModel, BaseDiscountModel
 from applications.suppliers.models import SupplierModel
 
@@ -41,6 +44,8 @@ class CarShowroomCar(BaseModel):
 
 class CarShowroomDiscount(BaseModel, BaseDiscountModel):
     carshowroom = models.ForeignKey(CarShowroomModel, on_delete=models.RESTRICT)
+
+    objects = IsActiveManager.from_queryset(CarShowroomDiscountQuerySet)()
 
     class Meta:
         db_table = 'car_showroom_discount'

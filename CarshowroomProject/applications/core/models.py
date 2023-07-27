@@ -7,7 +7,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from applications.core.enums import CarBrandEnum, CarFuelEnum, CarTypeEnum
-from applications.core.managers import IsActiveManager
+from applications.core.managers import IsActiveManager, CarQuerySet
 
 
 class BaseModel(models.Model):
@@ -31,6 +31,8 @@ class CarModel(BaseModel):
     body_type = models.CharField(max_length=30, choices=CarTypeEnum.choices())
     model = models.CharField(max_length=50)
 
+    objects = IsActiveManager.from_queryset(CarQuerySet)()
+
     def __str__(self):
         return f'{self.brand} {self.model}'
 
@@ -46,11 +48,6 @@ class BaseUser(AbstractUser):
 
     def __str__(self):
         return f'{self.username}'
-
-    # def save(self, *args, **kwargs):
-    #     if self.password:
-    #         self.password = make_password(self.password)
-    #     super().save(*args, **kwargs)
 
 
 class BaseDiscountModel(models.Model):
