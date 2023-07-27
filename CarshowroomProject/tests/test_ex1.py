@@ -1,85 +1,16 @@
 import json
-import random
 
 import pytest
 
+from applications.carshowroom import signals
 from applications.carshowroom.models import CarShowroomModel
-from applications.carshowroom.services import CarshowroomService
-from applications.core.enums import CarBrandEnum, CarTypeEnum, CarFuelEnum
 from applications.core.models import BaseUser, CarModel
-from applications.core.services import UserService, CarService
 from applications.suppliers.models import SupplierModel
-from applications.suppliers.services import SupplierService
-
-user_service = UserService()
-car_service = CarService()
-carshowroom_service = CarshowroomService()
-supplier_service = SupplierService()
-
-
-@pytest.fixture
-def user():
-    user_dc = {
-        'username': 'TestUser',
-        'first_name': 'Test',
-        'last_name': 'User',
-        'email': 'testemail@gmail.com',
-        'password': 'test_password1234',
-        'is_confirmed': True
-    }
-
-    user = user_service.create_user(user_dc)
-    return user
-
-
-@pytest.fixture
-def car():
-    car_dc = {
-        'brand': random.choice(list(CarBrandEnum)).value,
-        'body_type': random.choice(list(CarTypeEnum)).value,
-        'fuel': random.choice(list(CarFuelEnum)).value,
-        'model': 'TurboV3',
-    }
-
-    car = car_service.create_car(car_dc)
-    return car
-
-
-@pytest.fixture
-def carshowroom():
-    carshowroom_dc = {
-        'name': 'TestCarshowroom',
-        'country': 'USA',
-        'balance': 1000000,
-        'car_characteristics': json.dumps({"model": 22315}),
-        'discount': 5,
-    }
-
-    from applications.carshowroom import signals
-    signals.post_save.disconnect(signals.added_showroom, sender=CarShowroomModel)
-    carshowroom = carshowroom_service.create_carshowroom(carshowroom_dc)
-    signals.post_save.connect(signals.added_showroom, sender=CarShowroomModel)
-
-    return carshowroom
-
-
-
-@pytest.fixture
-def supplier():
-    supplier_dc = {
-        'name': 'TestSupplier',
-        'created_year': '1990-12-12',
-        'discount': 5,
-        'count_of_customers': 100,
-        'balance': 0
-    }
-
-    return supplier_service.create_supplier(supplier_dc)
 
 
 @pytest.mark.django_db
-def test_user_create(user):
-    assert BaseUser.objects.count() == 1
+def test_user_create(new_user1):
+    assert BaseUser.objects.get(id=1).username == "TestUser"
 
 
 @pytest.mark.django_db
@@ -95,3 +26,75 @@ def test_carshowroom_create(carshowroom):
 @pytest.mark.django_db
 def test_supplier_create(supplier):
     assert SupplierModel.objects.count() == 1
+
+
+@pytest.mark.django_db
+def test_user_register(client):
+    payload = {
+        'username': 'TestUser',
+        'first_name': 'Test',
+        'last_name': 'User',
+        'email': 'testemail@gmail.com',
+        'password': 'test_password1234',
+    }
+    response = client.post("/api/user/register/", payload, follow=True)
+    print(response.data)
+    assert response.status_code == 201
+
+
+@pytest.mark.django_db
+def test_user_register(client):
+    payload = {
+        'username': 'TestUser',
+        'first_name': 'Test',
+        'last_name': 'User',
+        'email': 'testemail@gmail.com',
+        'password': 'test_password1234',
+    }
+    response = client.post("/api/user/register/", payload, follow=True)
+    assert response.status_code == 201
+
+
+@pytest.mark.django_db
+def test_carshowroom_register(client):
+    payload = {
+        'name': 'TestCarshowroom',
+        'country': 'RU',
+        'balance': 1000000,
+        'car_characteristics': json.dumps({"model": 22315}),
+        'discount': 5,
+    }
+    signals.post_save.disconnect(signals.added_showroom, sender=CarShowroomModel)
+    response = client.post("/api/carshowrooms/", payload, follow=True)
+    signals.post_save.connect(signals.added_showroom, sender=CarShowroomModel)
+
+    print(response.status_code)
+    print(response.content)
+
+    assert response.status_code == 201
+
+
+@pytest.mark.django_db
+def test_car_register(client):
+    payload = {
+        'brand': 'bmw',
+        'body_type': 'sedan',
+        'fuel': 'petrol',
+        'model': 'X6',
+    }
+    response = client.post("/api/cars/", payload, follow=True)
+    print(response.content)
+    assert response.status_code == 201
+
+
+@pytest.mark.django_db
+def test_supplier_register(client):
+    payload = {
+        'name': 'TestSupplier',
+        'created_year': '1990-12-12',
+        'discount': 5,
+        'count_of_customers': 100,
+        'balance': 0
+    }
+    response = client.post("/api/suppliers/", payload, follow=True)
+    assert response.status_code == 201

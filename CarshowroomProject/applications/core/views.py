@@ -68,7 +68,7 @@ class BaseUserViewSet(GenericViewSet,
         user = serializer.instance
         self.service.send_confirm_email(user=user)
 
-        return Response({'detail': 'Verification email sent.'}, status=status.HTTP_200_OK)
+        return Response({'detail': 'Verification email sent.'}, status=status.HTTP_201_CREATED)
 
     @action(detail=False, methods=['GET'])
     def verify_email(self, request):
