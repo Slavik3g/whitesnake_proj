@@ -1,0 +1,8 @@
+#  tests:
+#    build:
+#      context: .
+#      dockerfile: ./Dockerfile-pytest
+#    depends_on:
+#      - db
+#    env_file:
+#      - ./.env
