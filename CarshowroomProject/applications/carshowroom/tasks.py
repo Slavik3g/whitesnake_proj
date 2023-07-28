@@ -18,12 +18,10 @@ from applications.suppliers.models import SupplierCarModel, SupplierDiscount, Su
 
 def max_percent_discount(car, supplier=None, carshowroom=None):
     if supplier is None:
-        discounts = CarShowroomDiscount.objects.filter(
-            Q(car_model=car) & Q(discount_end__gt=timezone.now().date()) & Q(carshowroom=carshowroom)).aggregate(
+        discounts = CarShowroomDiscount.objects.get_active_discounts(car=car, carshowroom=carshowroom).aggregate(
             Max('percent'))['percent__max']
     else:
-        discounts = SupplierDiscount.objects.filter(
-            Q(car_model=car) & Q(discount_end__gt=timezone.now().date()) & Q(supplier=supplier)).aggregate(
+        discounts = SupplierDiscount.objects.get_active_discounts(car=car, supplier=supplier).aggregate(
             Max('percent'))['percent__max']
     return discounts if discounts else 0
 

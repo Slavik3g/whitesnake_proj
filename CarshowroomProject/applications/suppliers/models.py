@@ -1,6 +1,9 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+
+from applications.core.managers import IsActiveManager
 from applications.core.models import BaseModel, CarModel, BaseDiscountModel
+from applications.suppliers.managers import SupplierDiscountQuerySet
 
 
 # Create your models here
@@ -40,6 +43,7 @@ class SupplierCarModel(BaseModel):
 class SupplierDiscount(BaseModel, BaseDiscountModel):
     supplier = models.ForeignKey(SupplierModel, on_delete=models.RESTRICT)
 
+    objects = IsActiveManager.from_queryset(SupplierDiscountQuerySet)()
     class Meta:
         db_table = 'supplier_discount'
         verbose_name = 'SupplierDiscount'
