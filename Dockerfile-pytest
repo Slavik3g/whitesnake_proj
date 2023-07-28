@@ -1,6 +1,14 @@
-FROM python
+FROM python:3.11.1
+MAINTAINER Slava Chebotarev "chebotarev.vs02@gmail.com"
+
+ENV PYTHONDONTWRITEBYTECODE=1
+
+ENV PYTHONUNBUFFERED=1
+
+COPY requirements.txt .
+RUN python -m pip install -r requirements.txt
+
 WORKDIR /test_project
 COPY ./CarshowroomProject /test_project
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+
 CMD python -m pytest

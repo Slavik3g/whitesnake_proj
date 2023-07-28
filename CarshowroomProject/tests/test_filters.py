@@ -58,6 +58,7 @@ class TestCarShowroomFilter:
         filtered_qs = CarShowroomFilter(filter_params, queryset=qs).qs
 
         assert filtered_qs.count() == 2
+        assert all(carshowroom.balance >= 150000 for carshowroom in filtered_qs)
 
     def test_filter_by_balance_lte(self, create_carshowrooms):
         qs = CarShowroomModel.objects.all()
@@ -65,37 +66,33 @@ class TestCarShowroomFilter:
         filtered_qs = CarShowroomFilter(filter_params, queryset=qs).qs
 
         assert filtered_qs.count() == 2
+        assert all(carshowroom.balance <= 150000 for carshowroom in filtered_qs)
 
 
 @pytest.mark.django_db
 class TestCarFilter:
     def test_filter_by_brand(self, create_cars):
         qs = CarModel.objects.all()
-        print(qs)
         filter_params = {'brand': 'bmw'}
         filtered_qs = CarFilter(filter_params, queryset=qs).qs
-        print(filtered_qs)
-
         assert filtered_qs.count() == 1
-        assert filtered_qs.first().brand == 'bmw'
+        assert all(car.brand == 'bmw' for car in filtered_qs)
 
-    # Test case for filtering by fuel
     def test_filter_by_fuel(self, create_cars):
         qs = CarModel.objects.all()
         filter_params = {'fuel': 'petrol'}
         filtered_qs = CarFilter(filter_params, queryset=qs).qs
 
         assert filtered_qs.count() == 2
-        assert filtered_qs.first().fuel == 'petrol'
+        assert all(car.fuel == 'petrol' for car in filtered_qs)
 
-    # Test case for filtering by body_type
     def test_filter_by_body_type(self, create_cars):
         qs = CarModel.objects.all()
         filter_params = {'body_type': 'micro'}
         filtered_qs = CarFilter(filter_params, queryset=qs).qs
 
         assert filtered_qs.count() == 3
-        assert filtered_qs.last().body_type == 'micro'
+        assert all(car.body_type == 'micro' for car in filtered_qs)
 
 
 @pytest.mark.django_db

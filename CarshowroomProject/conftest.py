@@ -25,6 +25,20 @@ def user():
         'last_name': 'User',
         'email': 'testemail@gmail.com',
         'password': 'test_password1234',
+    }
+
+    user = user_service.create_user(user_dc)
+    return user
+
+
+@pytest.fixture
+def confirmed_user():
+    user_dc = {
+        'username': 'TestUser',
+        'first_name': 'Test',
+        'last_name': 'User',
+        'email': 'testemail@gmail.com',
+        'password': 'test_password1234',
         'is_confirmed': True
     }
 
@@ -95,6 +109,7 @@ def carshowroom():
     signals.post_save.connect(signals.added_showroom, sender=CarShowroomModel)
 
     return carshowroom
+
 
 @pytest.fixture
 def supplier():
