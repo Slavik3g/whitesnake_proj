@@ -1,8 +1,11 @@
 import json
 
 import pytest
+from django.contrib.auth.hashers import make_password, check_password
 from pytest_lazyfixture import lazy_fixture
 from django.forms.models import model_to_dict
+
+from applications.core.services import UserService
 
 
 @pytest.mark.django_db
@@ -64,3 +67,31 @@ def test_email_send(client, user):
     }
     response = client.post('/api/reset_password/', email_dc, follow=True)
     assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_email_confirm(db, client, user):
+    password_dc = {
+        'new_password': 'new_pass123'
+    }
+    user_service = UserService()
+    uidb64 = user_service.create_uidb64(user.id)
+    token = user_service.get_tokens_for_user(user=user)['access']
+    response = client.post(f'/api/reset_password/confirm/{uidb64}/{token}', password_dc, follow=True)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_email_confirm(db, user, client):
+    user_service = UserService()
+    token = user_service.get_tokens_for_user(user=user)['access']
+    uidb64 = user_service.create_uidb64(user.pk)
+    password_data = {
+        'new_password': 'new_pass123'
+    }
+    response = client.post(f'/api/reset_password/confirm/{uidb64}/{token}/', password_data, follow=True, format='json')
+
+    assert response.status_code == 200
+    assert response.data == {'detail': 'Password reset successful.'}
+    user.refresh_from_db()
+    assert check_password('new_pass123', user.password) is True

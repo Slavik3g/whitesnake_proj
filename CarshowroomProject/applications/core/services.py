@@ -19,6 +19,7 @@ class CarService:
     def get_car(self, id):
         return CarModel.objects.get(id=id)
 
+
 class UserService:
 
     def create_user(self, user_data):
@@ -80,9 +81,12 @@ class UserService:
         user = BaseUser.objects.filter(pk=uid).first()
         return user
 
+    def create_uidb64(self, pk):
+        return urlsafe_base64_encode(force_bytes(pk))
+
     def send_email_for_change_email(self, user):
         token = self.get_tokens_for_user(user=user)['access']
-        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+        uidb64 = self.create_uidb64(user.pk)
         reset_link = f'http://localhost:8000/api/user/change_email/?uid={uidb64}&token={token}'
         subject = 'Change email'
         message = f'Please click on the link below to change your email:\n{reset_link}'

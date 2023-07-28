@@ -118,7 +118,7 @@ class RestorePasswordEmailSendView(APIView):
         email = serializer.validated_data['email']
         user = BaseUser.objects.filter(email=email).first()
         if user:
-            self.service.send_email_for_restore_password(email=email, user=user).delay()
+            self.service.send_email_for_restore_password(email=email, user=user)
         return Response({'detail': 'Password reset email sent.'}, status=status.HTTP_200_OK)
 
 

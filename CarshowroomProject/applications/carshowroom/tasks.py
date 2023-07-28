@@ -113,17 +113,11 @@ def check_offer():
         cars = CarModel.objects.filter(**offer.car_char)
         carshowroom_car = CarShowroomCar.objects.filter(car__in=cars, number__gt=0).order_by(
             (1 - max_percent_discount(carshowroom=F('carshowroom'), car=F('car_model')) / 100 * F('price'))).last()
-        print(carshowroom_car)
         if carshowroom_car:
-            print(carshowroom_car)
             price = carshowroom_car.price
-            print(price)
-            print(offer.customer.balance)
             if offer.customer.balance >= price and offer.max_price >= price:
                 carshowroom_car.carshowroom.balance += Decimal(price)
-                print(offer.customer.balance)
                 offer.customer.balance -= Decimal(price)
-                print(offer.customer.balance)
                 carshowroom_car.number -= 1
                 offer.is_active = False
                 CustomerPurchaseHistoryModel.objects.create(
