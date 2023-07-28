@@ -11,39 +11,6 @@ from applications.suppliers.filters import SupplierFilter
 from applications.suppliers.models import SupplierModel
 
 
-@pytest.fixture
-def create_carshowrooms():
-    # Create test data using bulk_create
-    test_data = [
-        CarShowroomModel(country='USA', balance=100000),
-        CarShowroomModel(country='Germany', balance=150000),
-        CarShowroomModel(country='France', balance=200000),
-    ]
-    return CarShowroomModel.objects.bulk_create(test_data)
-
-
-@pytest.fixture
-def create_cars():
-    # Create test data using bulk_create
-    test_data = [
-        CarModel(brand='bmw', fuel='petrol', body_type='micro', model='Test1'),
-        CarModel(brand='subaru', fuel='petrol', body_type='micro', model='Test2'),
-        CarModel(brand='lexus', fuel='diesel', body_type='micro', model='Test3'),
-    ]
-    return CarModel.objects.bulk_create(test_data)
-
-
-@pytest.fixture
-def create_suppliers():
-    # Create test data using bulk_create
-    test_data = [
-        SupplierModel(created_year=date(2021, 1, 1), balance=100000),
-        SupplierModel(created_year=date(2020, 6, 15), balance=150000),
-        SupplierModel(created_year=date(2019, 11, 30), balance=200000),
-    ]
-    return SupplierModel.objects.bulk_create(test_data)
-
-
 @pytest.mark.django_db
 class TestCarShowroomFilter:
     def test_filter_by_country(self, create_carshowrooms):
