@@ -21,6 +21,7 @@ ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', ]
 
 INTERNAL_IPS = ['127.0.0.1']
 import socket
+
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
 # Application definition
@@ -49,6 +50,7 @@ THIRD_PARTIES_APPS = [
     'rest_framework_simplejwt',
     "debug_toolbar",
     'django_filters',
+    'djoser',
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTIES_APPS + LOCAL_APPS
 
@@ -191,3 +193,11 @@ AUTH_USER_MODEL = 'core.BaseUser'
 CELERY_BROKER_URL = "redis://redis:6379/0"
 CELERY_RESULT_BACKEND = "redis://redis:6379/0"
 CELERY_TRACK_STARTED = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_USER_PASSWORD')

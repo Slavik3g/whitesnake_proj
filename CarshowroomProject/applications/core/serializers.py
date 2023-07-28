@@ -19,3 +19,14 @@ class BaseUserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True}
         }
+
+
+class RestorePasswordEmailSendSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        if not BaseUser.objects.filter(email=value).exists():
+            raise serializers.ValidationError("This email does not exist in our records.")
+        return value
+
+
