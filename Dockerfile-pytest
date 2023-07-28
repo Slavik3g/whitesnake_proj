@@ -1,8 +1,6 @@
-#  tests:
-#    build:
-#      context: .
-#      dockerfile: ./Dockerfile-pytest
-#    depends_on:
-#      - db
-#    env_file:
-#      - ./.env
+FROM python
+WORKDIR /test_project
+COPY ./CarshowroomProject /test_project
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+CMD python -m pytest

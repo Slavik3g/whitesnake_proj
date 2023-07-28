@@ -3,6 +3,7 @@ import json
 import pytest
 
 from applications.carshowroom import signals
+from applications.carshowroom.filters import CarShowroomFilter
 from applications.carshowroom.models import CarShowroomModel
 from applications.core.models import BaseUser, CarModel
 from applications.suppliers.models import SupplierModel
@@ -64,9 +65,7 @@ def test_carshowroom_register(client):
         'car_characteristics': json.dumps({"model": 22315}),
         'discount': 5,
     }
-    signals.post_save.disconnect(signals.added_showroom, sender=CarShowroomModel)
     response = client.post("/api/carshowrooms/", payload, follow=True)
-    signals.post_save.connect(signals.added_showroom, sender=CarShowroomModel)
 
     print(response.status_code)
     print(response.content)
@@ -98,3 +97,4 @@ def test_supplier_register(client):
     }
     response = client.post("/api/suppliers/", payload, follow=True)
     assert response.status_code == 201
+

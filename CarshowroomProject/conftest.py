@@ -96,7 +96,6 @@ def carshowroom():
 
     return carshowroom
 
-
 @pytest.fixture
 def supplier():
     supplier_dc = {
