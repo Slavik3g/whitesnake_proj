@@ -32,10 +32,11 @@ class CarShowroomViewSet(GenericViewSet,
     search_fields = ('id', 'name', 'country', 'discount')
     service = CarshowroomService()
 
-    # @action(metod=['GET'])
-    # def get_statistic(self, request):
-    #     statistic_data = self.service.get_statistics_data()
-    #     return Response(data=statistic_data, status=status.HTTP_200_OK)
+    @action(methods=['GET'], detail=True)
+    def get_statistic(self, request, pk):
+        carshowroom = self.service.get_carshowroom(pk)
+        statistic_data = self.service.get_statistics_data(carshowroom)
+        return Response(data=statistic_data, status=status.HTTP_200_OK)
 
 
 class CarshowroomDiscountView(ListCreateAPIView, ):

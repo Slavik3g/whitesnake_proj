@@ -11,7 +11,7 @@ from applications.core.models import BaseUser, CarModel
 from applications.core.services import UserService, CarService
 from applications.suppliers.models import SupplierModel
 from applications.suppliers.services import SupplierService
-from applications.customers.models import CustomerPurchaseHistoryModel
+from applications.customers.models import CustomerPurchaseHistoryModel, CustomerModel
 
 user_service = UserService()
 car_service = CarService()
@@ -31,6 +31,12 @@ def user():
 
     user = user_service.create_user(user_dc)
     return user
+
+
+@pytest.fixture
+def customer(user):
+    customer = CustomerModel.objects.get(user=user)
+    return customer
 
 
 @pytest.fixture
@@ -84,12 +90,7 @@ def new_user1(new_user_factory):
 
 @pytest.fixture
 def car():
-    car_dc = {
-        'brand': random.choice(list(CarBrandEnum)).value,
-        'body_type': random.choice(list(CarTypeEnum)).value,
-        'fuel': random.choice(list(CarFuelEnum)).value,
-        'model': 'TurboV3',
-    }
+    car_dc = {'brand': random.choice(list(CarBrandEnum)).value,'body_type': random.choice(list(CarTypeEnum)).value,'fuel': random.choice(list(CarFuelEnum)).value,'model': 'TurboV3',}
 
     car = car_service.create_car(car_dc)
     return car
@@ -125,13 +126,14 @@ def supplier():
 
     return supplier_service.create_supplier(supplier_dc)
 
+
 @pytest.fixture
 def create_carshowrooms():
     # Create test data using bulk_create
     test_data = [
-        CarShowroomModel(country='USA', balance=100000),
-        CarShowroomModel(country='Germany', balance=150000),
-        CarShowroomModel(country='France', balance=200000),
+        CarShowroomModel(country='AF', balance=100000),
+        CarShowroomModel(country='DE', balance=150000),
+        CarShowroomModel(country='FR', balance=200000),
     ]
     return CarShowroomModel.objects.bulk_create(test_data)
 
@@ -161,4 +163,3 @@ def create_suppliers():
 @pytest.fixture
 def client():
     return APIClient()
-

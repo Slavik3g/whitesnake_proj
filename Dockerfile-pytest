@@ -11,4 +11,4 @@ RUN python -m pip install -r requirements.txt
 WORKDIR /test_project
 COPY ./CarshowroomProject /test_project
 
-CMD python -m pytest
+CMD python -m pytest -rP

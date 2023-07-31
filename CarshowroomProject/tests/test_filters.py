@@ -14,10 +14,10 @@ from applications.suppliers.models import SupplierModel
 @pytest.mark.django_db
 class TestCarShowroomFilter:
     def test_filter_by_country(self, create_carshowrooms):
-        filter_params = {'country': 'US'}
+        filter_params = {'country': 'DE'}
         filtered_qs = CarShowroomFilter(filter_params, queryset=CarShowroomModel.objects.all()).qs
         assert filtered_qs.count() == 1
-        assert filtered_qs.first().country == 'US'
+        assert filtered_qs.first().country == 'DE'
 
     def test_filter_by_balance_gte(self, create_carshowrooms):
         qs = CarShowroomModel.objects.all()
