@@ -5,16 +5,32 @@ services:
     container_name: web
     restart: always
     build: .
-    ports:
-      - "8000:8000"
+    expose:
+      - 8000
     env_file:
       - .env
     volumes:
       - .:/app1
+      - static:/app/static
+
     depends_on:
       - postgres
       - redis
-    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+
+#  tests:
+#    container_name: tests
+#    build:
+#      context: .
+#      dockerfile: ./Dockerfile-pytest
+#    depends_on:
+#      - postgres
+#      - redis
+#    env_file:
+#      - ./.env
+#    volumes:
+#      - .:/tests
+
 
   postgres:
     container_name: postgres
@@ -34,7 +50,7 @@ services:
     env_file:
       - .env
     ports:
-      - "5050:80"
+      - '5050:4444'
     volumes:
       - pgadmin:/var/lib/pgadmin
 
@@ -80,6 +96,27 @@ services:
     ports:
       - "5555:5555"
 
+#  nginx:
+#    image: nginx:1.19.0-alpine
+#    expose:
+#      - 8080
+#    ports:
+#      - "80:8080"
+#    volumes:
+#      - /nginx_conf:/etc/nginx/conf.d/
+#      - ./static:/static
+#    depends_on:
+#      - web
+#    restart: always
+  nginx:
+    build: ./nginx
+    ports:
+      - '1337:80'
+    volumes:
+      - static:/app/static
+    depends_on:
+      - web
 volumes:
   db:
   pgadmin:
+  static:

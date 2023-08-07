@@ -1,4 +1,5 @@
 from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 
@@ -7,9 +8,34 @@ from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
 from applications.core import tasks
 from applications.core.models import BaseUser
+from applications.core.models import BaseUser, CarModel
+
+
+class CarService:
+    def create_car(self, car_data):
+        car, created = CarModel.objects.get_or_create(**car_data)
+        return car
+
+    def get_car(self, id):
+        return CarModel.objects.get(id=id)
 
 
 class UserService:
+
+    def create_user(self, user_data):
+        user = BaseUser(**user_data)
+        user.set_password(user.password)
+        user.save()
+        return user
+
+    def get_user(self, user_id=None, email=None):
+        if email:
+            return get_object_or_404(BaseUser, email=email)
+        if user_id:
+            return get_object_or_404(BaseUser, id=user_id)
+        else:
+            return None
+
     def get_tokens_for_user(self, user):
         token = RefreshToken.for_user(user)
 
@@ -55,9 +81,12 @@ class UserService:
         user = BaseUser.objects.filter(pk=uid).first()
         return user
 
+    def create_uidb64(self, pk):
+        return urlsafe_base64_encode(force_bytes(pk))
+
     def send_email_for_change_email(self, user):
         token = self.get_tokens_for_user(user=user)['access']
-        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+        uidb64 = self.create_uidb64(user.pk)
         reset_link = f'http://localhost:8000/api/user/change_email/?uid={uidb64}&token={token}'
         subject = 'Change email'
         message = f'Please click on the link below to change your email:\n{reset_link}'

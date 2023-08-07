@@ -28,11 +28,15 @@ djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
 djoser==2.2.0
 drf-yasg==1.21.6
+factory-boy==3.3.0
+Faker==19.2.0
 flake8==6.0.0
 flower==2.0.0
+gunicorn==21.2.0
 humanize==4.7.0
 idna==3.4
 inflection==0.5.1
+iniconfig==2.0.0
 isort==5.12.0
 itypes==1.2.0
 Jinja2==3.1.2
@@ -46,6 +50,7 @@ oauthlib==3.2.2
 packaging==23.1
 pathspec==0.11.1
 platformdirs==3.8.1
+pluggy==1.2.0
 prometheus-client==0.17.1
 prompt-toolkit==3.0.39
 psycopg2-binary==2.9.6
@@ -56,6 +61,10 @@ PyJWT==2.7.0
 pylint==2.17.4
 pylint-django==2.5.3
 pylint-plugin-utils==0.8.2
+pytest==7.4.0
+pytest-django==4.5.2
+pytest-factoryboy==2.5.1
+pytest-lazy-fixture==0.6.3
 python-dateutil==2.8.2
 python-dotenv==1.0.0
 python3-openid==3.2.0

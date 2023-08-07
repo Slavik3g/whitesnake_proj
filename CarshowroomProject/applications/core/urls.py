@@ -13,7 +13,6 @@ urlpatterns = [
     path('api/', include(user_router.urls)),
     path('api/reset_password/', RestorePasswordEmailSendView.as_view()),
     path('api/reset_password/confirm/<uidb64>/<token>/', RestorePasswordConfirmView.as_view()),
-
 ]
 
 

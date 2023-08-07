@@ -19,6 +19,9 @@ DEBUG = os.environ.get('DEBUG', False)
 
 ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', ]
 
+CSRF_COOKIE_DOMAIN = 'http://localhost:1337'
+CSRF_TRUSTED_ORIGINS = ['http://localhost:1337']
+
 INTERNAL_IPS = ['127.0.0.1']
 import socket
 
@@ -91,18 +94,18 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
     # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': os.environ.get('POSTGRES_DB'),
-    #     'USER': os.environ.get('POSTGRES_USER'),
-    #     'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-    #     'HOST': 'postgres',
-    #     'PORT': '5432',
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('POSTGRES_DB'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': 'postgres',
+        'PORT': '5432',
+    }
 }
 
 # Password validation
@@ -181,7 +184,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
